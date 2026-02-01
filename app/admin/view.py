@@ -37,8 +37,8 @@ class SettingsModelView(_CustomModelView):
     fields = [
         IntegerField(
             "interval",
-            label="Интервал измерения роста, сек.",
-            help_text="За какое время измерять рост цены, в секундах.",
+            label="Интервал измерения объема, сек.",
+            help_text="За какое время измерять объем, в секундах.",
             required=True,
         ),
         FloatField(

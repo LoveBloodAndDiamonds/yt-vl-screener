@@ -15,7 +15,7 @@ class SettingsORM(Base):
     """Айди настроек. По умолчанию 1."""
 
     interval: Mapped[int] = mapped_column(default=60)
-    """Интервал для измерения роста монеты в секундах."""
+    """Интервал для измерения роста объема в секундах."""
 
     min_multiplier: Mapped[float] = mapped_column(default=50.0)
     """Минимальный множитель объема."""
