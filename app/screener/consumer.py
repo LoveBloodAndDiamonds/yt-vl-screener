@@ -119,21 +119,29 @@ class Consumer:
         Returns:
             float: Объем за интервал, float: Множитель объема
         """
-        if not klines:
-            return 0, 0
+        if not klines or daily_volume <= 0:
+            return 0.0, 0.0
 
-        threshold = (time.time() - self._settings.interval) * 1000
-        valid_klines = [k for k in klines if k["t"] > threshold]
+        interval = self._settings.interval
+        if interval <= 0:
+            return 0.0, 0.0
 
-        if not valid_klines:
-            return 0, 0
+        threshold = (time.time() - interval) * 1000
 
-        vol_interval = sum(k["v"] for k in valid_klines)
-        try:
-            vol_per_sec_interval = vol_interval / self._settings.interval
-            vol_per_sec_daily = daily_volume / 86400
-            multiplier = vol_per_sec_interval / vol_per_sec_daily
-        except ZeroDivisionError:
-            multiplier = 0
+        vol_interval = 0.0
+        has_data = False
 
-        return vol_interval, multiplier
+        for k in klines:
+            if k["t"] <= threshold:
+                continue
+
+            vol_interval += k["v"]
+            has_data = True
+
+        if not has_data:
+            return 0.0, 0.0
+
+        vol_per_sec_interval = vol_interval / interval
+        vol_per_sec_daily = daily_volume / 86_400
+
+        return vol_interval, vol_per_sec_interval / vol_per_sec_daily
