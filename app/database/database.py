@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import (
 from app.config import config
 
 from .models import Base
+from .repositories import SettingsRepository
 
 
 class Database:
@@ -31,6 +32,9 @@ class Database:
         """
         self.session: AsyncSession = session
         """Текущая сессия базы данных."""
+
+        self.settings_repo: SettingsRepository = SettingsRepository(session)
+        """Репозиторий для работы с настройками."""
 
     @classmethod
     @asynccontextmanager

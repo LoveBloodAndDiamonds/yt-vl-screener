@@ -2,9 +2,7 @@
 Конфигурационные данные и настройка логирования.
 """
 
-__all__ = [
-    "config",
-]
+__all__ = ["config"]
 
 import os
 import uuid
@@ -12,6 +10,7 @@ from dataclasses import dataclass
 from os import getenv
 
 from sqlalchemy import URL
+from unicex import Exchange, MarketType
 
 from app.schemas import EnvironmentType
 
@@ -45,7 +44,7 @@ class _DatabaseConfig:
 class _AdminConfig:
     """Настройки админ-панели."""
 
-    title: str = "Admin Panel"
+    title: str = "Скринер объема"
     """Название приложения."""
 
     logo_url: str = "https://images.icon-icons.com/3256/PNG/512/admin_lock_padlock_icon_205893.png"
@@ -76,6 +75,12 @@ class Configuration:
 
     cypher_key: str = getenv("CYPHER_KEY", uuid.UUID(int=uuid.getnode()).hex[-12:])
     """Ключ для шифрования."""
+
+    exchange: Exchange = Exchange.ASTER
+    """Биржа для работы скринера."""
+
+    market_type: MarketType = MarketType.FUTURES
+    """Тип рынка для работы скринера."""
 
 
 config: Configuration = Configuration()

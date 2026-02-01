@@ -1,5 +1,5 @@
 [project]
-name = "fastapi-project-template"
+name = "yt-vl-screener"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -16,5 +16,6 @@ dependencies = [
     "psutil>=7.0.0",
     "sqlalchemy>=2.0.41",
     "starlette-admin>=0.14.1",
+    "unicex>=0.17.9",
     "uvicorn>=0.34.2",
 ]

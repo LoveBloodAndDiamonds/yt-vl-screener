@@ -1,8 +1,6 @@
 """Настройка админ-панели и регистрация представлений."""
 
-__all__ = [
-    "register_admin_routes",
-]
+__all__ = ["register_admin_routes"]
 
 from fastapi import FastAPI
 from starlette.middleware import Middleware
@@ -11,10 +9,10 @@ from starlette_admin import CustomView
 from starlette_admin.contrib.sqla import Admin
 
 from app.config import config
-from app.database import Database
+from app.database import Database, SettingsORM
 
 from .auth import AdminAuthProvider
-from .view import LogsCustomView, MetrCustomView
+from .view import LogsCustomView, MetrCustomView, SettingsModelView
 
 
 def register_admin_routes(app: FastAPI) -> None:
@@ -32,6 +30,7 @@ def register_admin_routes(app: FastAPI) -> None:
 
     # Add views
     admin.add_view(CustomView(label="Инструкция", icon="fa fa-info"))
+    admin.add_view(SettingsModelView(model=SettingsORM, label="Настройки", icon="fa fa-cogs"))
     admin.add_view(LogsCustomView(label="Логи", path="/logs", icon="fa fa-book"))
     admin.add_view(MetrCustomView(label="Система", path="/monitoring", icon="fa fa-heartbeat"))
 

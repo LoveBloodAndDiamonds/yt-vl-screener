@@ -3,9 +3,11 @@
 __all__ = [
     "Database",
     "Repository",
+    "SettingsRepository",
     "Base",
+    "SettingsORM",
 ]
 
 from .database import Database
-from .models import Base
-from .repositories import Repository
+from .models import Base, SettingsORM
+from .repositories import Repository, SettingsRepository

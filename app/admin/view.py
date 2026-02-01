@@ -1,6 +1,7 @@
 """Пользовательские представления для админ-панели."""
 
 __all__ = [
+    "SettingsModelView",
     "MetrCustomView",
     "LogsCustomView",
 ]
@@ -18,6 +19,7 @@ from starlette_admin import (
     CustomView,
 )
 from starlette_admin.contrib.sqla import ModelView
+from starlette_admin.fields import FloatField, IntegerField, StringField
 
 from app.config import logger
 
@@ -29,6 +31,47 @@ class _CustomModelView(ModelView):
         except Exception as e:
             logger.exception(e)
             raise e
+
+
+class SettingsModelView(_CustomModelView):
+    fields = [
+        IntegerField(
+            "interval",
+            label="Интервал измерения роста, сек.",
+            help_text="За какое время измерять рост цены, в секундах.",
+            required=True,
+        ),
+        FloatField(
+            "min_multiplier",
+            label="Минимальный множитель объема, Х",
+            help_text="Во сколько раз объем за указанный интервал должен быть больше среднего за тот же интервал за сутки.",
+            required=True,
+        ),
+        IntegerField(
+            "timeout",
+            label="Таймаут между сигналами по одинаковой монете, сек.",
+            help_text="Минимальный интервал между сигналами по одной и той же монете, в секундах. По умолчанию 60 сек.",
+            required=True,
+        ),
+        IntegerField(
+            "chat_id",
+            label="Айди чата для отправки уведомлений в телеграм",
+            help_text="Айди чата можно получить в телеграм боте @username_to_id_bot",
+            required=True,
+        ),
+        StringField(
+            "bot_token",
+            label="Токен телеграм бота для отправки уведомлений в телеграм.",
+            help_text="Токен телеграм бота можно получить в телеграм боте @botFather",
+            required=True,
+        ),
+    ]
+
+    def can_create(self, request: Request) -> bool:
+        return False
+
+    def can_delete(self, request: Request) -> bool:
+        return False
 
 
 class MetrCustomView(CustomView):
