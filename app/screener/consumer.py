@@ -4,7 +4,7 @@ import asyncio
 import time
 
 from unicex import Exchange, KlineDict, MarketType
-from unicex.extra import TimeoutTracker
+from unicex.extra import SignalCounter, TimeoutTracker
 from unicex.types import TickerDailyItem
 
 from app.config import config, logger
@@ -33,6 +33,7 @@ class Consumer:
         self._market_type = market_type
         self._telegram_bot = TelegramBot()
         self._timeout_tracker = TimeoutTracker[str]()
+        self._signal_counter = SignalCounter[str]()
         self._running = True
 
     def update_settings(self, settings: SettingsDTO) -> None:
@@ -93,6 +94,7 @@ class Consumer:
 
         if multiplier > self._settings.min_multiplier:
             logger.success(f"{symbol}: {multiplier}x, {ticker_daily}")
+            signal_count = self._signal_counter.add(symbol)
             return asyncio.create_task(
                 self._telegram_bot.send_message(
                     bot_token=self._settings.bot_token,  # type: ignore
@@ -104,6 +106,7 @@ class Consumer:
                         self._market_type,
                         ticker_daily["p"],
                         ticker_daily["q"],
+                        signal_count,
                     ),
                 )
             )
