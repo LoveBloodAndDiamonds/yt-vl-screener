@@ -117,6 +117,7 @@ class Producer:
                             raise ValueError(f"Unsupported market type: {self._market_type}")
             except Exception as e:
                 logger.error(f"{self.repr} error while updating ticker daily: {e}")
+            await asyncio.sleep(self.TICKER_DAILY_UPDATE_INTERVAL)
 
     async def fetch_collected_data(self) -> dict[str, list[KlineDict]]:
         """Возвращает накопленные данные. Возвращает ссылку на объект в котором хранятся данные."""
